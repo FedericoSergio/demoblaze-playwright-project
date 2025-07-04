@@ -1,5 +1,6 @@
-import { Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 import BasePage from './BasePage';
+import { time } from 'console';
 
 export default class CartPage extends BasePage {
     constructor(page: Page) {
@@ -8,9 +9,10 @@ export default class CartPage extends BasePage {
 
     private readonly cartSelectors = {
         placeOrderBtn: 'button:has-text("Place Order")',
-        totalItems: '#totalp',
+        totalPrice: '#totalp',
         productList: '#tbodyid',
         deleteBtn: 'a:has-text("Delete")',
+        product: '.success',
     }
 
     private readonly productSelectors = {
@@ -53,7 +55,7 @@ export default class CartPage extends BasePage {
 
     async deleteProduct(productName: string) {
         const productLocator = this.page.locator(this.cartSelectors.productList).getByText(productName);
-        await productLocator.locator('..').locator(this.productSelectors.delete).click();
+        await productLocator.locator('..').getByRole('link').click();
     }
 
     async getProductPrice(productName: string): Promise<string> {
@@ -66,14 +68,22 @@ export default class CartPage extends BasePage {
         return price.trim();
     }
 
-    async getProductCount(): Promise<number> {
-        const productList = this.page.locator(this.cartSelectors.productList).locator('tr');
-        return await productList.count();
+    async getPoroductsLocator(): Promise<any> {
+        return this.page.locator(this.cartSelectors.productList).locator('tr');
     }
 
-    async verifyProductPresence(productName: string): Promise<boolean> {
+    async getProductsCount(): Promise<number> {
+        return await this.page.locator(this.cartSelectors.product).count();
+    }
+
+    async verifyProductPresence(productName: string) {
         const productLocator = this.page.locator(this.cartSelectors.productList).getByText(productName);
-        return await productLocator.isVisible();
+        await expect(productLocator).toBeVisible({ timeout: 2000 });
+    }
+
+    async verifyProductAbsence(productName: string) {
+        const productLocator = this.page.locator(this.cartSelectors.productList).getByText(productName);
+        await expect(productLocator).toBeNull();
     }
 
     async verifyPurchaseSuccess(): Promise<boolean> {
