@@ -31,7 +31,7 @@ export default defineConfig({
 
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     //actionTimeout: 5000,
-    headless: false,
+    headless: true,
     viewport: { width: 1280, height: 720 },
   },
 
