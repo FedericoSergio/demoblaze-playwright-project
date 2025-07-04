@@ -18,7 +18,7 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
 
-  //timeout: 1000,
+  timeout: 30000,
 
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -31,7 +31,7 @@ export default defineConfig({
 
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     //actionTimeout: 5000,
-    headless: true,
+    headless: false,
     viewport: { width: 1280, height: 720 },
   },
 
